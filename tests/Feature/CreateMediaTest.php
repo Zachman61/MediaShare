@@ -8,7 +8,7 @@ use Storage;
 use Illuminate\Http\UploadedFile;
 use Log;
 
-class UploadMediaTest extends TestCase
+class CreateMediaTest extends TestCase
 {
     use RefreshDatabase;
 
