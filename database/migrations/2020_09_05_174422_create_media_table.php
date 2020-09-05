@@ -21,8 +21,8 @@ class CreateMediaTable extends Migration
                 'image', 'video'
             ]);
             $table->enum('status', [
-                'uploading',
-                'processing'
+                'processing',
+                'ready'
             ]);
             $table->string('hash');
             $table->string('filename');

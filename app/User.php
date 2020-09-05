@@ -31,6 +31,9 @@ use Illuminate\Notifications\Notifiable;
  * @method static Builder|User whereUsername($value)
  * @method static Builder|User whereApiKey($value)
  * @mixin \Eloquent
+ * @property string $api_key
+ * @property string|null $remember_token
+ * @method static Builder|User whereRememberToken($value)
  */
 class User extends Authenticatable
 {

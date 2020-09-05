@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Media;
+use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
@@ -25,20 +26,16 @@ class MediaController extends Controller
 
         if (!$file->isValid())
         {
-            abort(500, 'File upload failed');
+            response()->json([
+                'error' => 'File failed to upload.'
+            ], 500);
         }
 
         $mime = $file->getMimeType();
 
         if (str_contains($mime, 'image/'))
         {
-            $path = $file->store('public/'. floor($request->user()->Id / 1000));
-
-            $image = new Media();
-            $image->user_id = $request->user()->id;
-            $image->hash = \Str::random(16) . '.' . $file->getClientOriginalExtension();
-            $image->filename = $path;
-            $image->save();
+            $image = $this->uploadImage($request, $file);
 
             return response()->json([
                 'status' => 'image uploaded',
@@ -47,6 +44,8 @@ class MediaController extends Controller
         }
         else if (str_contains($mime, 'video/'))
         {
+            $video = $this->uploadVideo($request, $file);
+
             return response()->json([
                 'status' => 'video uploaded'
             ], 201);
@@ -55,5 +54,41 @@ class MediaController extends Controller
         return response()->json([
             'status' => 'Failed to upload'
         ], 500);
+    }
+
+    public function uploadImage(Request $request, UploadedFile $file) : Media
+    {
+        $image = new Media([
+            'title' => "{$request->user()->username}'s image",
+            'type' => 'image',
+            'user_id' => $request->user()->id,
+            'hash' => \Str::random(16) . '.' . $file->getClientOriginalExtension(),
+            'status' => 'ready',
+            'filename' => $this->handleFile($request, $file, 'i')
+        ]);
+
+        $image->saveOrFail();
+
+        return $image;
+    }
+
+    public function handleFile(Request $request, UploadedFile $file, string $folder) : string
+    {
+        return $file->store($folder . DIRECTORY_SEPARATOR . floor($request->user()->Id / 10), 'media');
+    }
+
+    public function uploadVideo(Request $request, UploadedFile  $file) : Media
+    {
+        $video = new Media([
+            'title' => "{$request->user()->username}'s video",
+            'type' => 'image',
+            'user_id' => $request->user()->id,
+            'hash' => \Str::random(16) . '.' . $file->getClientOriginalExtension(),
+            'filename' => $this->handleFile($request, $file, 'i')
+        ]);
+
+        $video->saveOrFail();
+
+        return $video;
     }
 }

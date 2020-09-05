@@ -8,14 +8,9 @@ use Storage;
 use Illuminate\Http\UploadedFile;
 use Log;
 
-class UploadMedia extends TestCase
+class UploadMediaTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
 
     protected function setUp(): void
     {
@@ -33,8 +28,6 @@ class UploadMedia extends TestCase
         $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
             'file' => $file,
         ]);
-
-        Log::debug($response->getContent());
 
         $response->assertStatus(201);
     }

@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
 Route::group(['prefix' => 'login'] ,function() {
     Route::get('/', 'AuthController@login')->name('login');
     Route::get('/callback', 'AuthController@loginCallback');
@@ -25,4 +20,6 @@ Route::group(['prefix' => 'login'] ,function() {
 
 Route::get('/logout', 'AuthController@logout')->name('logout');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::view('/{path?}', 'app')
+    ->where('path', '.*')
+    ->name('react');

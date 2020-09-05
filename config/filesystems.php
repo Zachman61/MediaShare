@@ -62,6 +62,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'thumbnails' => [
+            'driver' => 'local',
+            'root' => storage_path('app/media/thumbs'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
