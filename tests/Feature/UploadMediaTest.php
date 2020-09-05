@@ -59,8 +59,6 @@ class UploadMediaTest extends TestCase
             'file' => $file,
         ]);
 
-        Log::debug($response->content());
-
         $response->assertStatus(201);
     }
 }
