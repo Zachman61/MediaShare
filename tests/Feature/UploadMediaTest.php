@@ -18,6 +18,23 @@ class UploadMediaTest extends TestCase
         $this->setupAuth();
     }
 
+    public function testNoFileFails()
+    {
+        $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media');
+
+        $response->assertStatus(422);
+    }
+
+    public function testWrongFileTypeFails()
+    {
+        $file = UploadedFile::fake()->create('test.pdf', 10, 'application/pdf');
+
+        $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+            'file' => $file
+        ]);
+
+        $response->assertStatus(422);
+    }
 
     public function testImageUploadWorks()
     {

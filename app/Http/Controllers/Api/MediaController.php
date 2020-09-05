@@ -28,7 +28,7 @@ class MediaController extends Controller
         {
             response()->json([
                 'error' => 'File failed to upload.'
-            ], 500);
+            ], 422);
         }
 
         $mime = $file->getMimeType();
@@ -52,8 +52,8 @@ class MediaController extends Controller
         }
 
         return response()->json([
-            'status' => 'Failed to upload'
-        ], 500);
+            'status' => 'Failed to process upload'
+        ], 422);
     }
 
     public function uploadImage(Request $request, UploadedFile $file) : Media
