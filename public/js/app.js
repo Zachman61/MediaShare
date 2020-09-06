@@ -69996,13 +69996,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Home = function Home() {
-  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_context_user__WEBPACK_IMPORTED_MODULE_1__["default"]),
-      _useContext$userState = _useContext.userState,
-      userId = _useContext$userState.id,
-      avatar = _useContext$userState.avatar,
-      username = _useContext$userState.username;
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Home"), userId > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_UserAvatar__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, userId > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_UserAvatar__WEBPACK_IMPORTED_MODULE_2__["default"], {
     avatar: avatar
   }) : '');
 };
