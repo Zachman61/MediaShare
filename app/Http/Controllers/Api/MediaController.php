@@ -27,9 +27,6 @@ class MediaController extends Controller
             ]
         ]);
 
-        echo "test\n";
-        echo $request->file('file')->getClientOriginalName() ."\n";
-
         $title = !empty($data['title']) ? $data['title'] : '';
 
         /** @var UploadedFile $file */
