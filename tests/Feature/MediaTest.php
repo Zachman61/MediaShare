@@ -46,7 +46,7 @@ class MediaTest extends TestCase
             'file' => $file,
         ]);
 
-        Storage::disk('media')->assertExists('i'. '/0/'.$file->hashName());
+        Storage::disk('media')->assertExists('i' . '/0/' . $file->hashName());
 
         $response->assertStatus(201);
     }
@@ -54,6 +54,7 @@ class MediaTest extends TestCase
     public function testVideoUploadsWithNoName()
     {
         Storage::fake('media');
+        Storage::fake('thumbnails');
 
         $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
@@ -63,7 +64,7 @@ class MediaTest extends TestCase
         ]);
 
         $response->assertStatus(201);
-        Storage::disk('media')->assertExists('v'. '/0/'.$tmp->hashName());
+        Storage::disk('media')->assertExists('v' . '/0/' . $tmp->hashName());
         $response->assertStatus(201);
         $response->assertJsonCount(3);
         $response->assertJsonFragment([
@@ -74,6 +75,7 @@ class MediaTest extends TestCase
     public function testVideoUploadsWithName()
     {
         Storage::fake('media');
+        Storage::fake('thumbnails');
 
         $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
@@ -83,7 +85,9 @@ class MediaTest extends TestCase
             'file' => $tmp,
         ]);
 
-        Storage::disk('media')->assertExists('v'. '/0/'.$tmp->hashName());
+        echo $tmp->hashName();
+
+        Storage::disk('media')->assertExists('v' . '/0/' . $tmp->hashName());
         $response->assertStatus(201);
         $response->assertJsonCount(3);
         $response->assertJsonFragment([
