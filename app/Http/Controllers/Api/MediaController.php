@@ -28,7 +28,7 @@ class MediaController extends Controller
         ]);
 
         echo "test\n";
-        echo $request->file('file')->getClientOriginalName();
+        echo $request->file('file')->getClientOriginalName() ."\n";
 
         $title = !empty($data['title']) ? $data['title'] : '';
 
@@ -37,6 +37,7 @@ class MediaController extends Controller
 
         if (!$file->isValid())
         {
+            echo "invalid file\n";
             \Log::error('Invalid file');
             response()->json([
                 'error' => 'File failed to upload.'
@@ -61,17 +62,17 @@ class MediaController extends Controller
         else if (str_contains($mime ?: '', 'video/'))
         {
             $video = $this->uploadVideo($request, $file, $title);
-            echo 'video made';
+            echo "video made\n";
 
             ConvertVideoForStreaming::withChain([
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
 
-            echo 'post queue';
+            echo "post queue\n";
 
             return response()->json($video->only('title', 'user_id', 'link'), 201);
         }
-
+        echo "Missed both \n";
         return response()->json([
             'status' => 'Failed to process upload'
         ], 422);
