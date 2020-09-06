@@ -78,8 +78,9 @@ class MediaTest extends TestCase
         ]);
     }
 
-    public function testVideoDelete()
+    public function testMediaDelete()
     {
-
+        // TODO: Replace with deletion test
+        $this->assertTrue(true);
     }
 }
