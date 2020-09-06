@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Media;
 use App\Video;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
 class MediaController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
             'file' => [
@@ -33,7 +34,14 @@ class MediaController extends Controller
 
         $mime = $file->getMimeType();
 
-        if (str_contains($mime, 'image/'))
+        if (is_null($mime))
+        {
+            response()->json([
+                'error' => 'Could not parse file type.'
+            ], 422);
+        }
+
+        if (str_contains($mime ?: '', 'image/'))
         {
             $image = $this->uploadImage($request, $file);
 
@@ -42,7 +50,7 @@ class MediaController extends Controller
                 'filename' => url('/m/'. $image->hash)
             ], 201);
         }
-        else if (str_contains($mime, 'video/'))
+        else if (str_contains($mime ?: '', 'video/'))
         {
             $video = $this->uploadVideo($request, $file);
 
@@ -72,7 +80,13 @@ class MediaController extends Controller
         return $image;
     }
 
-    public function handleFile(Request $request, UploadedFile $file, string $folder) : string
+    /**
+     * @param Request $request
+     * @param UploadedFile $file
+     * @param string $folder
+     * @return string|false
+     */
+    public function handleFile(Request $request, UploadedFile $file, string $folder)
     {
         return $file->store($folder . DIRECTORY_SEPARATOR . floor($request->user()->Id / 10), 'media');
     }

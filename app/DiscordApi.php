@@ -2,13 +2,14 @@
 
 namespace App;
 
+use Exception;
 use RestCord\DiscordClient;
 use RestCord\Model\Guild\GuildMember;
 
 class DiscordApi
 {
     private DiscordClient $client;
-    private $guildId;
+    private int $guildId;
 
     public function __construct()
     {
@@ -16,29 +17,30 @@ class DiscordApi
             'token' => config('services.discord.bot_token')
         ]);
 
-        $this->guildId = config('services.discord.guild_id');
+        $this->guildId = (int) config('services.discord.guild_id');
     }
 
-    public function assertMemberExists($userId)
+    public function assertMemberExists(int $userId) : bool
     {
         try {
             $guildMember = $this->client->guild->getGuildMember([
-                'guild.id' => intval($this->guildId),
-                'user.id' => intval($userId)
+                'guild.id' => $this->guildId,
+                'user.id' => $userId
             ]);
-            if ($guildMember instanceof GuildMember)
-            {
-                return true;
-            }
-            return false;
+
+            return true;
         }
-        catch(\Exception $exception)
+        catch(Exception $exception)
         {
-            logger()->error($exception->getMessage());
+            \Log::error($exception->getMessage());
             return false;
         }
     }
 
+    /**
+     * @param User $user
+     * @return int|false
+     */
     public function createDMChannelForUser(User $user)
     {
         try
@@ -49,9 +51,9 @@ class DiscordApi
 
             return $channel->id;
         }
-        catch(\Exception $exception)
+        catch(Exception $exception)
         {
-            logger()->error($exception->getMessage());
+            \Log::error($exception->getMessage());
             return false;
         }
     }
