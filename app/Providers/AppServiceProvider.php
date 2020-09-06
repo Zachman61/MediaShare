@@ -13,10 +13,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->app->runningUnitTests())
-        {
-            \Log::debug('TESTING');
-        }
         if (app()->isLocal() || $this->app->runningUnitTests()) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);

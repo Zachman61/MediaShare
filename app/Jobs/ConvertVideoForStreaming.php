@@ -3,6 +3,9 @@
 namespace App\Jobs;
 
 use App\Media;
+use FFMpeg;
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,7 +21,8 @@ class ConvertVideoForStreaming implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param Media $media
+     * @throws \Exception
      */
     public function __construct(Media $media)
     {
@@ -37,6 +41,36 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle()
     {
-        //
+        // create a video format...
+        $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(500);
+
+        $name = \File::name($this->media->filename);
+        $convertedName = $name . '.' .  \File::extension($this->media->filename);
+        // open the uploaded video from the right disk...
+        FFMpeg::fromDisk('media')
+            ->open($this->media->filename)
+
+            // add the 'resize' filter...
+            ->addFilter(function ($filters) {
+                $filters->resize(new Dimension(960, 540));
+            })
+
+            // call the 'export' method...
+            ->export()
+
+            // tell the MediaExporter to which disk and in which format we want to export...
+            ->toDisk('media')
+            ->inFormat($lowBitrateFormat)
+            ->save($convertedName);
+
+        \Storage::disk('media')->delete($this->media->filename);
+        $this->media->update([
+            'status' => 'ready',
+            'filename' => $convertedName
+        ]);
+    }
+
+    private function getCleanFileName($filename){
+        return preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename) . '.mp4';
     }
 }

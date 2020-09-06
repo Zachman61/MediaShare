@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ConvertVideoForStreaming;
+use App\Jobs\CreateThumbnailFromVideo;
 use App\Media;
 use App\Video;
 use Illuminate\Http\JsonResponse;
@@ -27,6 +29,7 @@ class MediaController extends Controller
 
         if (!$file->isValid())
         {
+            \Log::error('Invalid file');
             response()->json([
                 'error' => 'File failed to upload.'
             ], 422);
@@ -53,6 +56,10 @@ class MediaController extends Controller
         else if (str_contains($mime ?: '', 'video/'))
         {
             $video = $this->uploadVideo($request, $file);
+
+            ConvertVideoForStreaming::withChain([
+                new CreateThumbnailFromVideo($video),
+            ])->dispatch($video);
 
             return response()->json([
                 'status' => 'video uploaded'
@@ -95,10 +102,10 @@ class MediaController extends Controller
     {
         $video = new Media([
             'title' => "{$request->user()->username}'s video",
-            'type' => 'image',
+            'type' => 'video',
             'user_id' => $request->user()->id,
             'hash' => \Str::random(16) . '.' . $file->getClientOriginalExtension(),
-            'filename' => $this->handleFile($request, $file, 'i')
+            'filename' => $this->handleFile($request, $file, 'tmp')
         ]);
 
         $video->saveOrFail();

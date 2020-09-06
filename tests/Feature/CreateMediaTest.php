@@ -7,6 +7,7 @@ use Tests\TestCase;
 use Storage;
 use Illuminate\Http\UploadedFile;
 use Log;
+use File;
 
 class CreateMediaTest extends TestCase
 {
@@ -51,12 +52,11 @@ class CreateMediaTest extends TestCase
 
     public function testVideoUploadWorks()
     {
-        Storage::fake('media');
-
-        $file = UploadedFile::fake()->create('file.mp4', 350, 'video/mp4');
+        $file = Storage::disk('public')->get('temp.mp4');
+        $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
 
         $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
-            'file' => $file,
+            'file' => $tmp,
         ]);
 
         $response->assertStatus(201);

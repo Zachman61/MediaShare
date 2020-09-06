@@ -38,6 +38,6 @@ class CreateThumbnailFromVideo implements ShouldQueue
             ->getFrameFromSeconds(0)
             ->export()
             ->toDisk('thumbnails')
-            ->save($this->media.'.png');
+            ->save($this->media->id.'.png');
     }
 }
