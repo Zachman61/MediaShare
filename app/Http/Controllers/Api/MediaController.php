@@ -95,9 +95,9 @@ class MediaController extends Controller
      * @param Media $media
      * @return string|false
      */
-    public function handleFile(User $user, UploadedFile $file, string $folder, Media $media)
+    public function handleFile(User $user, UploadedFile $file, string $folder)
     {
-        return $file->storeAs($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), $media->hash, 'media');
+        return $file->store($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), 'media');
     }
 
     public function uploadVideo(Request $request, UploadedFile  $file, string $title = '') : Media
@@ -111,7 +111,7 @@ class MediaController extends Controller
 
         $video->save();
 
-        $video->filename = $this->handleFile($request->user(), $file, 'tmp', $video);
+        $video->filename = $this->handleFile($request->user(), $file, 'tmp');
 
         $video->saveOrFail();
 
