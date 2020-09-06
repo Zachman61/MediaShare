@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ConvertVideoForStreaming;
+use App\Jobs\CreateThumbnailFromVideo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Testing\MimeType;
+use Queue;
 use Tests\TestCase;
 use Storage;
 use Illuminate\Http\UploadedFile;
@@ -55,6 +58,9 @@ class MediaTest extends TestCase
     {
         Storage::fake('media');
         Storage::fake('thumbnails');
+        Queue::fake();
+        Queue::assertNothingPushed();
+
 
         $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
@@ -63,12 +69,8 @@ class MediaTest extends TestCase
             'file' => $tmp,
         ]);
 
-        $response->assertStatus(201);
-        Storage::disk('media')->assertExists('v' . '/0/' . $tmp->hashName());
-        $response->assertStatus(201);
-        $response->assertJsonCount(3);
-        $response->assertJsonFragment([
-            'user_id' => $this->user->id,
+        Queue::assertPushedWithChain(ConvertVideoForStreaming::class, [
+            CreateThumbnailFromVideo::class
         ]);
     }
 
@@ -76,6 +78,8 @@ class MediaTest extends TestCase
     {
         Storage::fake('media');
         Storage::fake('thumbnails');
+        Queue::fake();
+        Queue::assertNothingPushed();
 
         $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
@@ -85,14 +89,8 @@ class MediaTest extends TestCase
             'file' => $tmp,
         ]);
 
-        echo $tmp->hashName();
-
-        Storage::disk('media')->assertExists('v' . '/0/' . $tmp->hashName());
-        $response->assertStatus(201);
-        $response->assertJsonCount(3);
-        $response->assertJsonFragment([
-            'user_id' => $this->user->id,
-            'title' => 'test'
+        Queue::assertPushedWithChain(ConvertVideoForStreaming::class, [
+            CreateThumbnailFromVideo::class
         ]);
     }
 
