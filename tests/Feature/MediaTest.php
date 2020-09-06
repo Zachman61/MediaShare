@@ -61,7 +61,6 @@ class MediaTest extends TestCase
         Queue::fake();
         Queue::assertNothingPushed();
 
-
         $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
 
