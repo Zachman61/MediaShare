@@ -53,9 +53,4 @@ class User extends Authenticatable
     protected $attributes = [
         'is_admin' => false
     ];
-
-    public function skipsAuthorization()
-    {
-        return true;
-    }
 }
