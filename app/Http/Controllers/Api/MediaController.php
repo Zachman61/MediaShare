@@ -48,6 +48,7 @@ class MediaController extends Controller
 
         if (is_null($mime))
         {
+            echo "busted mine \n";
             response()->json([
                 'error' => 'Could not parse file type.'
             ], 422);
