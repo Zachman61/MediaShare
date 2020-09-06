@@ -36,4 +36,18 @@ class Media extends Model
     protected $fillable = [
         'title', 'type', 'user_id', 'status', 'hash', 'filename'
     ];
+
+    protected $appends = [
+        'link'
+    ];
+
+    protected $attributes = [
+        'filename' => '',
+        'hash' => ''
+    ];
+
+    public function getLink()
+    {
+        return url('/m/'. $this->hash);
+    }
 }

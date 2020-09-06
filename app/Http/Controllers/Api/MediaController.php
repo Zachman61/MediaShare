@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ConvertVideoForStreaming;
 use App\Jobs\CreateThumbnailFromVideo;
 use App\Media;
+use App\User;
 use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
     public function create(Request $request) : JsonResponse
     {
-        $this->validate($request, [
+        $data = $this->validate($request, [
+            'title' => 'string|min:3',
             'file' => [
                 'file',
                 'required',
@@ -23,6 +26,8 @@ class MediaController extends Controller
                 'max:'. config('media.max_file_size')
             ]
         ]);
+
+        $title = !empty($data['title']) ? $data['title'] : '';
 
         /** @var UploadedFile $file */
         $file = $request->file('file');
@@ -46,24 +51,19 @@ class MediaController extends Controller
 
         if (str_contains($mime ?: '', 'image/'))
         {
-            $image = $this->uploadImage($request, $file);
+            $image = $this->uploadImage($request, $file, $title);
 
-            return response()->json([
-                'status' => 'image uploaded',
-                'filename' => url('/m/'. $image->hash)
-            ], 201);
+            return response()->json($image->only('title', 'user_id', 'link'), 201);
         }
         else if (str_contains($mime ?: '', 'video/'))
         {
-            $video = $this->uploadVideo($request, $file);
+            $video = $this->uploadVideo($request, $file, $title);
 
             ConvertVideoForStreaming::withChain([
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
 
-            return response()->json([
-                'status' => 'video uploaded'
-            ], 201);
+            return response()->json($video->only('title', 'user_id', 'link'), 201);
         }
 
         return response()->json([
@@ -71,16 +71,17 @@ class MediaController extends Controller
         ], 422);
     }
 
-    public function uploadImage(Request $request, UploadedFile $file) : Media
+    public function uploadImage(Request $request, UploadedFile $file, $title = '') : Media
     {
         $image = new Media([
-            'title' => "{$request->user()->username}'s image",
+            'title' => $title ?: "{$request->user()->username}'s image",
             'type' => 'image',
             'user_id' => $request->user()->id,
             'hash' => \Str::random(16) . '.' . $file->getClientOriginalExtension(),
-            'status' => 'ready',
-            'filename' => $this->handleFile($request, $file, 'i')
+            'status' => 'ready'
         ]);
+
+        $image->filename = $this->handleFile($request->user(), $file, 'i', $image);
 
         $image->saveOrFail();
 
@@ -88,25 +89,29 @@ class MediaController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param User $user
      * @param UploadedFile $file
      * @param string $folder
+     * @param Media $media
      * @return string|false
      */
-    public function handleFile(Request $request, UploadedFile $file, string $folder)
+    public function handleFile(User $user, UploadedFile $file, string $folder, Media $media)
     {
-        return $file->store($folder . DIRECTORY_SEPARATOR . floor($request->user()->Id / 10), 'media');
+        return $file->storeAs($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), $media->hash, 'media');
     }
 
-    public function uploadVideo(Request $request, UploadedFile  $file) : Media
+    public function uploadVideo(Request $request, UploadedFile  $file, $title = '') : Media
     {
         $video = new Media([
-            'title' => "{$request->user()->username}'s video",
+            'title' => $title ?: "{$request->user()->username}'s video",
             'type' => 'video',
             'user_id' => $request->user()->id,
-            'hash' => \Str::random(16) . '.' . $file->getClientOriginalExtension(),
-            'filename' => $this->handleFile($request, $file, 'tmp')
+            'hash' => Str::random(8) . '.' . $file->getClientOriginalExtension()
         ]);
+
+        $video->save();
+
+        $video->filename = $this->handleFile($request->user(), $file, 'tmp', $video);
 
         $video->saveOrFail();
 

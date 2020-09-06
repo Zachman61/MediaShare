@@ -50,7 +50,7 @@ class CreateMediaTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function testVideoUploadWorks()
+    public function testVideoUploadsWithNoName()
     {
         $file = Storage::disk('public')->get('temp.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
@@ -60,5 +60,23 @@ class CreateMediaTest extends TestCase
         ]);
 
         $response->assertStatus(201);
+    }
+
+    public function testVideoUploadsWithName()
+    {
+        $file = Storage::disk('public')->get('temp.mp4');
+        $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
+
+        $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+            'title' => 'test',
+            'file' => $tmp,
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJsonCount(3);
+        $response->assertJsonFragment([
+            'user_id' => 1,
+            'title' => 'test'
+        ]);
     }
 }

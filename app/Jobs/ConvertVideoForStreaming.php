@@ -43,22 +43,14 @@ class ConvertVideoForStreaming implements ShouldQueue
     {
         // create a video format...
         $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(500);
+        $convertedName =  'v'. DIRECTORY_SEPARATOR . floor($this->media->user_id / 10) . DIRECTORY_SEPARATOR . $this->media->id . '.' .\File::extension($this->media->filename);
 
-        $name = \File::name($this->media->filename);
-        $convertedName = $name . '.' .  \File::extension($this->media->filename);
-        // open the uploaded video from the right disk...
         FFMpeg::fromDisk('media')
             ->open($this->media->filename)
-
-            // add the 'resize' filter...
             ->addFilter(function ($filters) {
                 $filters->resize(new Dimension(960, 540));
             })
-
-            // call the 'export' method...
             ->export()
-
-            // tell the MediaExporter to which disk and in which format we want to export...
             ->toDisk('media')
             ->inFormat($lowBitrateFormat)
             ->save($convertedName);
@@ -68,6 +60,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             'status' => 'ready',
             'filename' => $convertedName
         ]);
+        FFMpeg::cleanupTemporaryFiles();
     }
 
     private function getCleanFileName($filename){
