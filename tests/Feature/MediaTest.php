@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 
 class MediaTest extends TestCase
 {
-    //use RefreshDatabase;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

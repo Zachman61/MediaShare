@@ -4,9 +4,9 @@ import UserAvatar from "../partials/UserAvatar";
 
 const Home = () => {
     return (
-        <>
-            { userId > 0 ? <UserAvatar avatar={avatar} /> : ''}
-        </>
+        <p>
+          Temp home page
+        </p>
     )
 }
 
