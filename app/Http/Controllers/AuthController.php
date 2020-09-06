@@ -45,16 +45,15 @@ class AuthController extends Controller
             $user = $existingUser;
         }
 
-
         auth()->login($user);
 
-        return redirect()->route('home');
+        return redirect('/');
     }
 
     public function logout() : RedirectResponse
     {
         auth()->logout();
 
-        return redirect()->route('home');
+        return redirect('/');
     }
 }

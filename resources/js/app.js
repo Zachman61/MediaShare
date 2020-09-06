@@ -17,10 +17,13 @@ import {
     Switch, Route, Link
 } from "react-router-dom"
 import Home from "./components/Pages/Home";
+import {UserProvider} from "./context/user";
 
 render((
     <Router>
-        <App/>
+        <UserProvider>
+            <App/>
+        </UserProvider>
     </Router>
     ),
     document.getElementById('app'),

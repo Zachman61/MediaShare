@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * App\User
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $username
  * @property string $avatar
  * @property int $is_admin
- * * @property string $api_key
+ * @property string $api_key
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -31,13 +32,10 @@ use Illuminate\Notifications\Notifiable;
  * @method static Builder|User whereUsername($value)
  * @method static Builder|User whereApiKey($value)
  * @mixin \Eloquent
- * @property string $api_key
- * @property string|null $remember_token
- * @method static Builder|User whereRememberToken($value)
  */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -48,7 +46,16 @@ class User extends Authenticatable
         'username', 'discord_id', 'avatar', 'api_key', 'is_admin'
     ];
 
+    protected $hidden = [
+        'api_key', 'created_at', 'updated_at'
+    ];
+
     protected $attributes = [
         'is_admin' => false
     ];
+
+    public function skipsAuthorization()
+    {
+        return true;
+    }
 }

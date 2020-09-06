@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('avatar');
             $table->integer('is_admin');
             $table->string('api_key');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
