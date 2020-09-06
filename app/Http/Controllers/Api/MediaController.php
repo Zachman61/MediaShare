@@ -61,10 +61,13 @@ class MediaController extends Controller
         else if (str_contains($mime ?: '', 'video/'))
         {
             $video = $this->uploadVideo($request, $file, $title);
+            echo 'video made';
 
             ConvertVideoForStreaming::withChain([
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
+
+            echo 'post queue';
 
             return response()->json($video->only('title', 'user_id', 'link'), 201);
         }
