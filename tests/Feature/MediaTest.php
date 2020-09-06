@@ -50,7 +50,7 @@ class MediaTest extends TestCase
 
     public function testVideoUploadsWithNoName()
     {
-        $file = Storage::disk('public')->get('temp.mp4');
+        $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
 
         $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
@@ -62,7 +62,7 @@ class MediaTest extends TestCase
 
     public function testVideoUploadsWithName()
     {
-        $file = Storage::disk('public')->get('temp.mp4');
+        $file = Storage::disk('public')->get('test.mp4');
         $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
 
         $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
