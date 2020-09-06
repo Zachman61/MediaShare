@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property string $status
  * @property string $hash
- * @property string $filename
+ * @property string|false $filename
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Media newModelQuery()
@@ -46,7 +46,7 @@ class Media extends Model
         'hash' => ''
     ];
 
-    public function getLink()
+    public function getLink() : string
     {
         return url('/m/'. $this->hash);
     }

@@ -26,8 +26,7 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function __construct(Media $media)
     {
-        if ($media->type !== 'video')
-        {
+        if ($media->type !== 'video') {
             throw new \Exception('Images cannot be converted for streaming.');
         }
 
@@ -43,11 +42,11 @@ class ConvertVideoForStreaming implements ShouldQueue
     {
         // create a video format...
         $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(500);
-        $convertedName =  'v'. DIRECTORY_SEPARATOR . floor($this->media->user_id / 10) . DIRECTORY_SEPARATOR . $this->media->id . '.' .\File::extension($this->media->filename);
+        $convertedName = 'v' . DIRECTORY_SEPARATOR . floor($this->media->user_id / 10) . DIRECTORY_SEPARATOR . $this->media->id . '.' . \File::extension((string)$this->media->filename);
 
         FFMpeg::fromDisk('media')
             ->open($this->media->filename)
-            ->addFilter(function ($filters) {
+            ->addFilter(function (FFMpeg\Filters\Video\VideoFilters $filters) {
                 $filters->resize(new Dimension(960, 540));
             })
             ->export()
@@ -55,15 +54,11 @@ class ConvertVideoForStreaming implements ShouldQueue
             ->inFormat($lowBitrateFormat)
             ->save($convertedName);
 
-        \Storage::disk('media')->delete($this->media->filename);
+        \Storage::disk('media')->delete((string)$this->media->filename);
         $this->media->update([
             'status' => 'ready',
             'filename' => $convertedName
         ]);
         FFMpeg::cleanupTemporaryFiles();
-    }
-
-    private function getCleanFileName($filename){
-        return preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename) . '.mp4';
     }
 }

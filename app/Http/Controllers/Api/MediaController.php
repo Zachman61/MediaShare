@@ -71,7 +71,7 @@ class MediaController extends Controller
         ], 422);
     }
 
-    public function uploadImage(Request $request, UploadedFile $file, $title = '') : Media
+    public function uploadImage(Request $request, UploadedFile $file, string $title = '') : Media
     {
         $image = new Media([
             'title' => $title ?: "{$request->user()->username}'s image",
@@ -100,7 +100,7 @@ class MediaController extends Controller
         return $file->storeAs($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), $media->hash, 'media');
     }
 
-    public function uploadVideo(Request $request, UploadedFile  $file, $title = '') : Media
+    public function uploadVideo(Request $request, UploadedFile  $file, string $title = '') : Media
     {
         $video = new Media([
             'title' => $title ?: "{$request->user()->username}'s video",
