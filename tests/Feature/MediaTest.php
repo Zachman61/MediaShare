@@ -6,12 +6,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Storage;
 use Illuminate\Http\UploadedFile;
-use Log;
-use File;
 
-class CreateMediaTest extends TestCase
+class MediaTest extends TestCase
 {
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -75,8 +73,13 @@ class CreateMediaTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonCount(3);
         $response->assertJsonFragment([
-            'user_id' => 1,
+            'user_id' => $this->user->id,
             'title' => 'test'
         ]);
+    }
+
+    public function testVideoDelete()
+    {
+
     }
 }
