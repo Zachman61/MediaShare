@@ -18,7 +18,7 @@ class MediaController extends Controller
     {
         return response()->json($media);
     }
-    
+
     public function create(Request $request) : JsonResponse
     {
         $data = $this->validate($request, [
