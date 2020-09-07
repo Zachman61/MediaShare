@@ -104,6 +104,7 @@ class MediaController extends Controller
         $video = new Media([
             'title' => $title ?: "{$request->user()->username}'s video",
             'type' => 'video',
+            'status' => 'processing',
             'user_id' => $request->user()->id,
             'hash' => Str::random(8) . '.' . $file->getClientOriginalExtension()
         ]);
