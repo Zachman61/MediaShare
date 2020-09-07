@@ -16,7 +16,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Media $media;
+    public Media $media;
 
     /**
      * Create a new job instance.

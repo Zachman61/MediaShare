@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Jobs\ConvertVideoForStreaming;
 use App\Jobs\CreateThumbnailFromVideo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Testing\MimeType;
 use Queue;
 use Tests\TestCase;
 use Storage;
