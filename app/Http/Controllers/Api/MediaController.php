@@ -61,7 +61,7 @@ class MediaController extends Controller
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
 
-            return response()->json($video->toJson(), 201);
+            return response()->json($video, 201);
         }
 
         return response()->json([
@@ -78,6 +78,13 @@ class MediaController extends Controller
             return response()->json([
                 'error' => 'You are not allowed to modify this resource.'
             ], 403);
+        }
+
+        if ($media->type == 'video' && $media->status == 'processing')
+        {
+            return response()->json([
+                'error' => 'You cannot delete a video that is processing.'
+            ], 500);
         }
 
         $media->delete();
@@ -102,18 +109,6 @@ class MediaController extends Controller
         return $image;
     }
 
-    /**
-     * @param User $user
-     * @param UploadedFile $file
-     * @param string $folder
-     * @param Media $media
-     * @return string|false
-     */
-    public function handleFile(User $user, UploadedFile $file, string $folder)
-    {
-        return $file->store($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), 'media');
-    }
-
     public function uploadVideo(Request $request, UploadedFile  $file, string $title = '') : Media
     {
         $video = new Media([
@@ -131,5 +126,17 @@ class MediaController extends Controller
         $video->saveOrFail();
 
         return $video;
+    }
+
+    /**
+     * @param User $user
+     * @param UploadedFile $file
+     * @param string $folder
+     * @param Media $media
+     * @return string|false
+     */
+    public function handleFile(User $user, UploadedFile $file, string $folder)
+    {
+        return $file->store($folder . DIRECTORY_SEPARATOR . floor($user->id / 10), 'media');
     }
 }

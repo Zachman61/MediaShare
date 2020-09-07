@@ -107,9 +107,52 @@ class MediaTest extends TestCase
         Storage::disk('media')->assertExists('i/0/' . $file->hashName());
 
         $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
-        
+
         $delete->assertStatus(204);
 
         Storage::disk('media')->assertMissing('i/0/' . $file->hashName());
+    }
+
+    public function testVideoCanBeDeletedWhileReady()
+    {
+        Storage::fake('media');
+
+        $file = Storage::disk('public')->get('test.mp4');
+        $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
+
+        $upload = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+            'title' => 'test',
+            'file' => $tmp,
+        ]);
+
+        $hash = $upload->json('hash');
+
+        $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
+
+        $delete->assertStatus(204);
+    }
+
+    public function testVideoCannotBeDeletedWhileProcessing()
+    {
+        Storage::fake('media');
+        Queue::fake();
+        Queue::assertNothingPushed();
+
+        $file = Storage::disk('public')->get('test.mp4');
+        $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
+
+        $upload = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+            'title' => 'test',
+            'file' => $tmp,
+        ]);
+
+        $hash = $upload->json('hash');
+
+        $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
+
+        $delete->assertStatus(500);
+        $delete->assertExactJson([
+            'error' => 'You cannot delete a video that is processing.'
+        ]);
     }
 }
