@@ -14,6 +14,11 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
+    public function show(Media $media)
+    {
+        return response()->json($media);
+    }
+    
     public function create(Request $request) : JsonResponse
     {
         $data = $this->validate($request, [
