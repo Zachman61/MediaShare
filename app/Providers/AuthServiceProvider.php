@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('delete-media', function (User $user, Media $media) {
-            return $user->is_admin ?: $user->id === $media->user_id;
+            return $user->is_admin ?: $user->id == $media->user_id;
         });
 
         Passport::routes();
