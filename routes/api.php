@@ -21,5 +21,6 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
 
    Route::group(['prefix' => 'media'], function() {
        Route::post('/', 'MediaController@create');
+       Route::delete('/{media}', 'MediaController@delete');
    });
 });

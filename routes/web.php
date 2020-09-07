@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/m/{media}', function(\App\Media $media) {
+    $pathToFile = Storage::path('media/'. $media->filename);
+    return response()->file($pathToFile);
+});
+
 Route::group(['prefix' => 'login'] ,function() {
     Route::get('/', 'AuthController@login')->name('login');
     Route::get('/callback', 'AuthController@loginCallback');

@@ -7,7 +7,6 @@ use App\Jobs\ConvertVideoForStreaming;
 use App\Jobs\CreateThumbnailFromVideo;
 use App\Media;
 use App\User;
-use App\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -53,7 +52,7 @@ class MediaController extends Controller
         {
             $image = $this->uploadImage($request, $file, $title);
 
-            return response()->json($image->only('title', 'user_id', 'link'), 201);
+            return response()->json($image, 201);
         }
         else if (str_contains($mime ?: '', 'video/'))
         {
@@ -62,12 +61,28 @@ class MediaController extends Controller
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
 
-            return response()->json($video->only('title', 'user_id', 'link'), 201);
+            return response()->json($video->toJson(), 201);
         }
 
         return response()->json([
             'status' => 'Failed to process upload'
         ], 422);
+    }
+
+    public function delete(Request $request, Media $media) : JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        if (!$user->can('delete-media', $media))
+        {
+            return response()->json([
+                'error' => 'You are not allowed to modify this resource.'
+            ], 403);
+        }
+
+        $media->delete();
+
+        return response()->json([], 204);
     }
 
     public function uploadImage(Request $request, UploadedFile $file, string $title = '') : Media
@@ -80,7 +95,7 @@ class MediaController extends Controller
             'status' => 'ready'
         ]);
 
-        $image->filename = $this->handleFile($request->user(), $file, 'i', $image);
+        $image->filename = $this->handleFile($request->user(), $file, 'i');
 
         $image->saveOrFail();
 

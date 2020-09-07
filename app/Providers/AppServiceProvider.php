@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Media;
+use App\Observers\MediaObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -28,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Passport::hashClientSecrets();
+        Media::observe(MediaObserver::class);
     }
 }

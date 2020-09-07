@@ -41,13 +41,22 @@ class Media extends Model
         'link'
     ];
 
+    protected $hidden = [
+        'id'
+    ];
+
     protected $attributes = [
         'filename' => '',
         'hash' => ''
     ];
 
-    public function getLink() : string
+    public function getLinkAttribute() : string
     {
         return url('/m/'. $this->hash);
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('hash', $value)->firstOrFail();
     }
 }

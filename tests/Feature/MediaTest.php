@@ -48,7 +48,7 @@ class MediaTest extends TestCase
             'file' => $file,
         ]);
 
-        Storage::disk('media')->assertExists('i' . '/0/' . $file->hashName());
+        Storage::disk('media')->assertExists('i/0/' . $file->hashName());
 
         $response->assertStatus(201);
     }
@@ -92,9 +92,24 @@ class MediaTest extends TestCase
         ]);
     }
 
-    public function testMediaDelete()
+    public function testImageDelete()
     {
-        // TODO: Replace with deletion test
-        $this->assertTrue(true);
+        Storage::fake('media');
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+            'file' => $file,
+        ]);
+
+        $hash = $response->json('hash');
+
+        Storage::disk('media')->assertExists('i/0/' . $file->hashName());
+
+        $response = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
+
+        $response->assertStatus(204);
+
+        Storage::disk('media')->assertMissing('i/0/' . $file->hashName());
     }
 }
