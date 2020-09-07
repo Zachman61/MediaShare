@@ -34,7 +34,6 @@ class MediaController extends Controller
 
         if (!$file->isValid())
         {
-            echo "invalid file\n";
             \Log::error('Invalid file');
             response()->json([
                 'error' => 'File failed to upload.'
@@ -45,7 +44,6 @@ class MediaController extends Controller
 
         if (is_null($mime))
         {
-            echo "busted mine \n";
             response()->json([
                 'error' => 'Could not parse file type.'
             ], 422);
@@ -60,17 +58,13 @@ class MediaController extends Controller
         else if (str_contains($mime ?: '', 'video/'))
         {
             $video = $this->uploadVideo($request, $file, $title);
-            echo "video made\n";
-
             ConvertVideoForStreaming::withChain([
                 new CreateThumbnailFromVideo($video),
             ])->dispatch($video);
 
-            echo "post queue\n";
-
             return response()->json($video->only('title', 'user_id', 'link'), 201);
         }
-        echo "Missed both \n";
+
         return response()->json([
             'status' => 'Failed to process upload'
         ], 422);
