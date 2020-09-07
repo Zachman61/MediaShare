@@ -87,6 +87,8 @@ class MediaTest extends TestCase
             'file' => $tmp,
         ]);
 
+        echo $response->getContent();
+
         Queue::assertPushedWithChain(ConvertVideoForStreaming::class, [
             CreateThumbnailFromVideo::class
         ]);
