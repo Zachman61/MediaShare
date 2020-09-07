@@ -98,17 +98,17 @@ class MediaTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
+        $upload = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
             'file' => $file,
         ]);
 
-        $hash = $response->json('hash');
+        $hash = $upload->json('hash');
 
         Storage::disk('media')->assertExists('i/0/' . $file->hashName());
 
-        $response = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
-
-        $response->assertStatus(204);
+        $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
+        echo json_encode($delete->content());
+        $delete->assertStatus(204);
 
         Storage::disk('media')->assertMissing('i/0/' . $file->hashName());
     }
