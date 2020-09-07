@@ -107,7 +107,7 @@ class MediaTest extends TestCase
         Storage::disk('media')->assertExists('i/0/' . $file->hashName());
 
         $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
-        echo json_encode($delete->content());
+        
         $delete->assertStatus(204);
 
         Storage::disk('media')->assertMissing('i/0/' . $file->hashName());
