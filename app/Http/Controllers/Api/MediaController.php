@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
-    public function show(Media $media)
+    public function show(Media $media) : JsonResponse
     {
         return response()->json($media);
     }

@@ -148,7 +148,9 @@ class MediaTest extends TestCase
 
         $hash = $upload->json('hash');
 
-        $delete = $this->actingAs($this->user, 'api')->json('DELETE', "/api/media/$hash");
+        echo $hash;
+
+        $delete = $this->actingAs($this->user, 'api')->delete("/api/media/$hash");
 
         $delete->assertStatus(500);
         $delete->assertExactJson([
