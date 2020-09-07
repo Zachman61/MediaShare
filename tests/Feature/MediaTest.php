@@ -92,7 +92,7 @@ class MediaTest extends TestCase
         ]);
     }
 
-    public function testImageDelete()
+    public function testMediaDelete()
     {
         Storage::fake('media');
 
@@ -113,25 +113,6 @@ class MediaTest extends TestCase
         Storage::disk('media')->assertMissing('i/0/' . $file->hashName());
     }
 
-    public function testVideoCanBeDeletedWhileReady()
-    {
-        Storage::fake('media');
-
-        $file = Storage::disk('public')->get('test.mp4');
-        $tmp = UploadedFile::fake()->createWithContent('tmp.mp4', $file);
-
-        $upload = $this->actingAs($this->user, 'api')->json('POST', '/api/media', [
-            'title' => 'test',
-            'file' => $tmp,
-        ]);
-
-        $hash = $upload->json('hash');
-
-        $delete = $this->actingAs($this->user, 'api')->delete("/api/media/$hash");
-
-        $delete->assertStatus(204);
-    }
-
     public function testVideoCannotBeDeletedWhileProcessing()
     {
         Storage::fake('media');
@@ -148,9 +129,7 @@ class MediaTest extends TestCase
 
         $hash = $upload->json('hash');
 
-        echo $hash;
-
-        $delete = $this->actingAs($this->user, 'api')->delete("/api/media/$hash");
+        $delete = $this->actingAs($this->user, 'api')->delete('/api/media/' . $hash);
 
         $delete->assertStatus(500);
         $delete->assertExactJson([
