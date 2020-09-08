@@ -18,6 +18,15 @@ Route::get('/m/{media}', function(\App\Media $media) {
     return response()->file($pathToFile);
 });
 
+Route::get('/t/{media}', function(\App\Media $media) {
+   if ($media->type !== 'video') {
+       return response('', 404);
+   }
+
+   $pathToFile = Storage::path('thumbs/'. $media->id. '.jpg');
+   return response()->file($pathToFile);
+});
+
 Route::group(['prefix' => 'login'] ,function() {
     Route::get('/', 'AuthController@login')->name('login');
     Route::get('/callback', 'AuthController@loginCallback');

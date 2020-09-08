@@ -14,6 +14,11 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
+    public function index() : JsonResponse
+    {
+        return response()->json(Media::paginate(15));
+    }
+
     public function show(Media $media) : JsonResponse
     {
         return response()->json($media);

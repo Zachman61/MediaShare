@@ -1,12 +1,21 @@
-import React, {useContext} from 'react'
-import UserContext from "../../context/user";
-import UserAvatar from "../partials/UserAvatar";
+import React, {useContext, useEffect} from 'react'
+import MediaItem from "../partials/MediaItem";
+import MediaContext from "../../context/media";
 
 const Home = () => {
+    const {mediaState, dispatchForMedia} = useContext(MediaContext)
+    useEffect(() => {
+        axios.get('/api/media')
+            .then(response => {
+                dispatchForMedia({type: 'LIST', payload: response.data.data})
+            })
+
+    }, [])
+
     return (
-        <p>
-          Temp home page
-        </p>
+        <div className='row'>
+            {mediaState.media.map((media, i) => <MediaItem media={media} key={i} />)}
+        </div>
     )
 }
 

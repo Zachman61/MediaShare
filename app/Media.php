@@ -38,8 +38,10 @@ class Media extends Model
     ];
 
     protected $appends = [
-        'link'
+        'link', 'thumbnail'
     ];
+
+    protected $with = ['user'];
 
     protected $hidden = [
         'id'
@@ -50,9 +52,23 @@ class Media extends Model
         'hash' => ''
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getLinkAttribute() : string
     {
         return url('/m/'. $this->hash);
+    }
+
+    public function getThumbnailAttribute() : string
+    {
+        if ($this->type === 'video') {
+            return url('t/'. $this->hash);
+        }
+
+        return $this->link;
     }
 
     public function resolveRouteBinding($value, $field = null)
