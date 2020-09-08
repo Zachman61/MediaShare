@@ -1,8 +1,10 @@
 
 export const mediaReducer = (state, action) => {
-    console.log(action)
+
     switch(action.type) {
         case 'LIST':
+            return {...state, media: action.payload}
+        case 'VIEW':
             return {...state, media: action.payload}
         case 'ADD':
             const addMedia = [...state.media]

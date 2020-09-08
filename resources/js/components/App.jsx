@@ -4,6 +4,7 @@ import Home from "./Pages/Home";
 import UserContext from "../context/user";
 import NavBar from "./NavBar";
 import {MediaProvider} from "../context/media";
+import MediaView from "./Pages/MediaView";
 
 const App = () => {
     const {userState, dispatchForUser} = useContext(UserContext)
@@ -12,18 +13,23 @@ const App = () => {
             .then(response => {
                 dispatchForUser({type: 'LOGIN', payload: response.data})
             })
-            .catch(error => { console.log(error)})
+            .catch(error => {
+                console.log(error)
+            })
     }, [])
     return (
         <>
             <NavBar {...userState} />
             <div className='container'>
                 <Switch>
-                    <Route path="/">
-                        <MediaProvider>
+                    <MediaProvider>
+                        <Route path='/media/:hash'>
+                            <MediaView/>
+                        </Route>
+                        <Route exact path="/">
                             <Home {...userState} />
-                        </MediaProvider>
-                    </Route>
+                        </Route>
+                    </MediaProvider>
                 </Switch>
             </div>
         </>

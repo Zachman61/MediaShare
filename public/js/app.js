@@ -69876,6 +69876,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _context_user__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../context/user */ "./resources/js/context/user/index.js");
 /* harmony import */ var _NavBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./NavBar */ "./resources/js/components/NavBar.jsx");
 /* harmony import */ var _context_media__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../context/media */ "./resources/js/context/media/index.js");
+/* harmony import */ var _Pages_MediaView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Pages/MediaView */ "./resources/js/components/Pages/MediaView.js");
+
 
 
 
@@ -69900,9 +69902,12 @@ var App = function App() {
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_NavBar__WEBPACK_IMPORTED_MODULE_4__["default"], userState), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_context_media__WEBPACK_IMPORTED_MODULE_5__["MediaProvider"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    path: "/media/:hash"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pages_MediaView__WEBPACK_IMPORTED_MODULE_6__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    exact: true,
     path: "/"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_context_media__WEBPACK_IMPORTED_MODULE_5__["MediaProvider"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pages_Home__WEBPACK_IMPORTED_MODULE_2__["default"], userState))))));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pages_Home__WEBPACK_IMPORTED_MODULE_2__["default"], userState))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
@@ -70029,6 +70034,60 @@ var Home = function Home() {
 
 /***/ }),
 
+/***/ "./resources/js/components/Pages/MediaView.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/Pages/MediaView.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _context_media__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../context/media */ "./resources/js/context/media/index.js");
+
+
+
+
+var MediaView = function MediaView() {
+  var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
+      hash = _useParams.hash;
+
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_context_media__WEBPACK_IMPORTED_MODULE_2__["default"]),
+      media = _useContext.mediaState.media,
+      dispatchForMedia = _useContext.dispatchForMedia;
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    axios.get("/api/media/".concat(hash)).then(function (res) {
+      return dispatchForMedia({
+        type: 'VIEW',
+        payload: res.data
+      });
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  }, []);
+
+  if (!Object.keys(media).length) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "d-flex justify-content-center pt-5"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "spinner-grow",
+      role: "status"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "sr-only"
+    }, "Loading...")));
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, media.title));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (MediaView);
+
+/***/ }),
+
 /***/ "./resources/js/components/partials/MediaItem.js":
 /*!*******************************************************!*\
   !*** ./resources/js/components/partials/MediaItem.js ***!
@@ -70040,6 +70099,8 @@ var Home = function Home() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
 
 
 var MediaItem = function MediaItem(_ref) {
@@ -70048,10 +70109,12 @@ var MediaItem = function MediaItem(_ref) {
     className: "col col-lg-3"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/media/".concat(media.hash)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
     src: media.thumbnail,
     className: "card-img-top"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h2 d-block"
@@ -70176,10 +70239,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var mediaReducer = function mediaReducer(state, action) {
-  console.log(action);
-
   switch (action.type) {
     case 'LIST':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        media: action.payload
+      });
+
+    case 'VIEW':
       return _objectSpread(_objectSpread({}, state), {}, {
         media: action.payload
       });

@@ -22,11 +22,11 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
    Route::group(['prefix' => 'media'], function() {
        Route::get('/', 'MediaController@index');
        Route::post('/', 'MediaController@create');
-       Route::get('/{media}', 'MediaController@show');
        Route::delete('/{media}', 'MediaController@delete');
    });
 });
 
 Route::group(['prefix' => 'media', 'namespace' => 'Api'], function() {
     Route::get('/', 'MediaController@index');
+    Route::get('/{media}', 'MediaController@show');
 });
