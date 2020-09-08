@@ -10,13 +10,9 @@ require('./bootstrap');
 
 import React from 'react'
 import { render } from 'react-dom'
-// import store from './store'
-// import Routes from './routes'
 import {
     BrowserRouter as Router,
-    Switch, Route, Link
 } from "react-router-dom"
-import Home from "./components/Pages/Home";
 import {UserProvider} from "./context/user";
 
 render((
