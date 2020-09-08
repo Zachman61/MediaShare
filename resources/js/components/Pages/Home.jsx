@@ -1,6 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import MediaItem from "../partials/MediaItem";
 import MediaContext from "../../context/media";
+import Spinner from "../partials/Spinner";
 
 const Home = () => {
     const {mediaState, dispatchForMedia} = useContext(MediaContext)
@@ -11,6 +12,9 @@ const Home = () => {
             })
 
     }, [])
+    if (!mediaState.media) {
+        return <Spinner />
+    }
 
     return (
         <div className='row'>

@@ -70003,6 +70003,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _partials_MediaItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../partials/MediaItem */ "./resources/js/components/partials/MediaItem.js");
 /* harmony import */ var _context_media__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../context/media */ "./resources/js/context/media/index.js");
+/* harmony import */ var _partials_Spinner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../partials/Spinner */ "./resources/js/components/partials/Spinner.jsx");
+
 
 
 
@@ -70020,6 +70022,11 @@ var Home = function Home() {
       });
     });
   }, []);
+
+  if (!mediaState.media) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Spinner__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+  }
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, mediaState.media.map(function (media, i) {
@@ -70047,6 +70054,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _context_media__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../context/media */ "./resources/js/context/media/index.js");
+/* harmony import */ var _partials_Spinner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../partials/Spinner */ "./resources/js/components/partials/Spinner.jsx");
+
 
 
 
@@ -70071,14 +70080,7 @@ var MediaView = function MediaView() {
   }, []);
 
   if (!Object.keys(media).length) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "d-flex justify-content-center pt-5"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "spinner-grow",
-      role: "status"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      className: "sr-only"
-    }, "Loading...")));
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Spinner__WEBPACK_IMPORTED_MODULE_3__["default"], null);
   }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, media.title));
@@ -70106,7 +70108,7 @@ __webpack_require__.r(__webpack_exports__);
 var MediaItem = function MediaItem(_ref) {
   var media = _ref.media;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "col col-lg-3"
+    className: "col-sm-6 col-md-3"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
@@ -70124,6 +70126,34 @@ var MediaItem = function MediaItem(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (MediaItem);
+
+/***/ }),
+
+/***/ "./resources/js/components/partials/Spinner.jsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/partials/Spinner.jsx ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var Spinner = function Spinner() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "d-flex justify-content-center pt-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "spinner-grow",
+    role: "status"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Loading...")));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Spinner);
 
 /***/ }),
 

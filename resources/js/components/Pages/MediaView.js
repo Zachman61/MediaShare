@@ -1,6 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import {useParams} from 'react-router-dom'
 import MediaContext from "../../context/media";
+import Spinner from "../partials/Spinner";
 
 const MediaView = () => {
     const {hash} = useParams();
@@ -16,13 +17,7 @@ const MediaView = () => {
             .catch(err => console.log(err))
     }, [])
     if (!Object.keys(media).length) {
-        return (
-            <div className="d-flex justify-content-center pt-5">
-                <div className="spinner-grow" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-            </div>
-        )
+        return <Spinner />
     }
     return (
         <>
