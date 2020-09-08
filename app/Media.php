@@ -30,6 +30,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Media whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Media whereUserId($value)
  * @mixin \Eloquent
+ * @property int $is_private
+ * @property-read string $link
+ * @property-read string $thumbnail
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Media whereIsPrivate($value)
  */
 class Media extends Model
 {

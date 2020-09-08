@@ -26,6 +26,7 @@ class CreateMediaTable extends Migration
             ]);
             $table->string('hash');
             $table->string('filename');
+            $table->boolean('is_private')->default(0);
             $table->timestamps();
         });
     }

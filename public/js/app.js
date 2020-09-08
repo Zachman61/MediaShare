@@ -69894,7 +69894,9 @@ var App = function App() {
         type: 'LOGIN',
         payload: response.data
       });
-    })["catch"](function (error) {});
+    })["catch"](function (error) {
+      console.log(error);
+    });
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_NavBar__WEBPACK_IMPORTED_MODULE_4__["default"], userState), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "container"
@@ -70255,8 +70257,8 @@ var UserProvider = function UserProvider(_ref) {
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UserContext.Provider, {
     value: {
-      mediaState: state,
-      dispatchForMedia: dispatch
+      userState: state,
+      dispatchForUser: dispatch
     }
   }, children);
 };

@@ -12,7 +12,7 @@ const UserContext = createContext({userState: initialUserState, dispatchForUser:
 
 export const UserProvider = ({initialState = initialUserState, children}) => {
     const [state, dispatch] = useReducer(userReducer, initialState)
-    return <UserContext.Provider value={ { mediaState: state, dispatchForMedia: dispatch} }>
+    return <UserContext.Provider value={ { userState: state, dispatchForUser: dispatch} }>
         {children}
     </UserContext.Provider>
 }

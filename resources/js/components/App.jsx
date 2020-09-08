@@ -12,7 +12,7 @@ const App = () => {
             .then(response => {
                 dispatchForUser({type: 'LOGIN', payload: response.data})
             })
-            .catch(error => {})
+            .catch(error => { console.log(error)})
     }, [])
     return (
         <>
