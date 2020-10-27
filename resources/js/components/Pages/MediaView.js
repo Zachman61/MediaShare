@@ -22,6 +22,10 @@ const MediaView = () => {
     return (
         <>
             <h3>{media.title}</h3>
+            {media.type === 'image' ?
+                <img src={`/t/${media.hash}`} />
+                : 'video'
+            }
         </>
     )
 }

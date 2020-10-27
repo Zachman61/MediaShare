@@ -20,7 +20,7 @@ Route::get('/m/{media}', function(\App\Media $media) {
 
 Route::get('/t/{media}', function(\App\Media $media) {
    if ($media->type !== 'video') {
-       return response('', 404);
+       return response()->file(Storage::disk('media')->path($media->filename));
    }
 
    $pathToFile = Storage::path('thumbs/'. $media->id. '.jpg');
