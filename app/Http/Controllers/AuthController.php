@@ -21,11 +21,11 @@ class AuthController extends Controller
         /** @var DiscordUser $discordUser */
         $discordUser = Socialite::driver('discord')->user();
 
-        $client = new DiscordApi();
-        if (!$client->assertMemberExists((int) $discordUser->getId()))
-        {
-            abort(403);
-        }
+//        $client = new DiscordApi();
+//        if (!$client->assertMemberExists((int) $discordUser->getId()))
+//        {
+//            abort(403);
+//        }
 
         $existingUser =  User::where('discord_id', $discordUser->getId())->first();
         if (empty($existingUser))
