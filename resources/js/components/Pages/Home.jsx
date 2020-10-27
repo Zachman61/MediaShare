@@ -12,13 +12,12 @@ const Home = () => {
             })
 
     }, [])
-    if (!mediaState.media) {
-        return <Spinner />
+    if (!Array.isArray(mediaState.media)) {
+        return <Spinner/>
     }
-
-    return (
+    return Array.isArray(mediaState.media) && (
         <div className='row'>
-            {mediaState.media.map((media, i) => <MediaItem media={media} key={i} />)}
+            {mediaState.media.map((media, i) => <MediaItem media={media} key={i}/>)}
         </div>
     )
 }
