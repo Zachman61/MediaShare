@@ -25,4 +25,24 @@ class UserApiTest extends TestCase
         $response = $this->actingAs($this->user, 'api')->get('/api/user');
         $response->assertStatus(200);
     }
+
+    public function testUserCanGetAPIWithValidKey()
+    {
+        $response = $this->get('/api/user', [
+            'X-API-KEY' => $this->user->api_key,
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function testUserCannotAccessAPIWithInvalidKey()
+    {
+        $response = $this->get('/api/user', [
+            'X-API-KEY' => null,
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401);
+    }
 }
